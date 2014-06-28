@@ -1,0 +1,11 @@
+MAS producerCustomer {
+
+	infrastructure: JaCaMo
+
+	agents:
+		producer;
+		agent1 sample_agent;
+
+	aslSourcePath:
+		"src/asl";
+}
