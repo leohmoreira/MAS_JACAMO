@@ -3,7 +3,8 @@ MAS producerCustomer {
 	infrastructure: JaCaMo
 
 	agents:
-		producer;
+		customer;
+		producer #3;
 		agent1 sample_agent;
 
 	aslSourcePath:
