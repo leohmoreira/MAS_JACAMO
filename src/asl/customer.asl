@@ -22,9 +22,7 @@
 
 +!working: i_am_ready(true) 
 	<-	?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
-		//.broadcast(achieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));
-		//.send(agent1,achieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));
-		.broadcast(achieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));
+		.broadcast(achieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));//aviso a todos que quero saber o preco
 		.print("sent");
 		.wait(2000);
 		!working.
@@ -32,6 +30,8 @@
 		
 +buy: i_am_ready(true) 
 	<-	.print("COMPREI").
-		//.broadcast(unachieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));
++!producerPrice(PRODUCER_ID,PRICE)
+	<- 	.union([PRODUCER_ID,PRICE],X,X);
+		.print("@@@@@@",X).
 		
 

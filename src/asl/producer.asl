@@ -44,14 +44,15 @@
 			+i_am_ready(false);
 		}
 		!working(T). //continue working
-+!howMuch(CUSTOMER,MONEY): true
++!howMuch(CUSTOMER,MONEY): i_am_ready(true)
 	<- 	.print("--------------------------");
 		.print(CUSTOMER,MONEY);
 		?myConfiguration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT); //recover configuration
+		.send(CUSTOMER,achieve,producerPrice(PRODUCER_ID,PRICE));//update price list
+	 
 		if(MONEY >= PRICE)
 		{
-			.print("!!!",PRICE);
-			.send(CUSTOMER,tell,buy);
+			.print("!!!",MONEY,PRICE);
 		}
 		.
 	
