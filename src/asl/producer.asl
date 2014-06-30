@@ -22,25 +22,36 @@
 		!working(0).//starts with 0 available itens
 
 +!working(V): i_am_ready(true) & myConfiguration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT)
-	<-	.print("Producer ",PRODUCER_ID,"  -> Ready and working ...");
-		!manufacture(V).
+	<-	!manufacture(V).
 		
++!working(V): i_am_ready(false)
+	<-	.print("nothing to do").
 		
 +!manufacture(ITENS_AVAILABLE): i_am_ready(true) 
 	<-	?myConfiguration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT); //recover configuration
-		if ((T - 1) > LIMIT)
+		if ((ITENS_AVAILABLE + 1) < LIMIT)
 		{
 			.print("Producer: ",PRODUCER_ID," -> assembling new item ... ");
-			.wait(TIME_TO_ASSEMBLE * 1000);
+			.wait(TIME_TO_ASSEMBLE * 100);
 			T = ITENS_AVAILABLE + 1;
-			-+itens_available(T);	//update belief
-			.print("Producer: ",PRODUCER_ID," -> new item assembled ");
+			+itensAvailable(T);	//update belief
+			.print("Producer: ",PRODUCER_ID," -> new item assembled ",T);
 		}
 		else
 		{
 			.print("Producer: ",PRODUCER_ID," -> reached limit capacity. ");
+			-i_am_ready(true);
+			+i_am_ready(false);
 		}
 		!working(T). //continue working
-
-+sell: true
-	<- .print("SELLING").
++!howMuch(CUSTOMER,MONEY): true
+	<- 	.print("--------------------------");
+		.print(CUSTOMER,MONEY);
+		?myConfiguration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT); //recover configuration
+		if(MONEY >= PRICE)
+		{
+			.print("!!!",PRICE);
+			.send(CUSTOMER,tell,buy);
+		}
+		.
+	

@@ -4,8 +4,13 @@
 
 /* Initial goals */
 
-!start.
+//!start.
 
 /* Plans */
 
 +!start : true <- .print("hello world.").
+
++!howMuch(CUSTOMER,MONEY)
+	<- .print("**********").
+		
+		
