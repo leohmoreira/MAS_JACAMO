@@ -1,7 +1,9 @@
 // Agent customer in project producerCustomer
 
 /* Initial beliefs and rules */
+i_am_ready(false). 
 bestPrice(-1).
+qtd_bought_itens(0).
 /* Initial goals */
 
 !start.
@@ -17,32 +19,62 @@ bestPrice(-1).
 +!set_configuration(CUSTOMER_ID,MAXIMUM_PRICE): true
 	<-	.print("Created. Maximum Price: ",MAXIMUM_PRICE);
 		+i_am_ready(true); //indicates it is ready
+		-i_am_ready(false); 
 		+myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
 		!working.//starts with 0 available itens
 
 +!working: i_am_ready(true) 
 	<-	?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
 		.broadcast(achieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));//aviso a todos que quero saber o preco
-		.print("sent");
+		//.print("sent");
 		.wait(2000);
 		!working.
-		
-		
-+buy: i_am_ready(true) 
-	<-	.print("COMPREI").
-+!producerPrice(PRODUCER_ID,PRICE)
-	<- 	?bestPrice(BestPrice);
-		if(BestPrice == -1)
+
++!producerPrice(PRODUCER_ID,PRICE):i_am_ready(Status)
+	<- 	+i_am_ready(false);
+		-i_am_ready(true);
+		?bestPrice(BestPrice);
+		if(Status == true)
 		{
-			-bestPrice(-1);
-			+bestPrice(PRICE);
-		}
-		else
-		{
-			if(BestPrice > PRICE)
+			if(BestPrice == -1)
 			{
-				-bestPrice(BestPrice);
+				.print("first-------------");
 				+bestPrice(PRICE);
+				-bestPrice(-1);
+				+bestProducer(PRODUCER_ID);
 			}
+			else
+			{
+				if(BestPrice > PRICE)
+				{
+					-bestProducer(BestProducer);
+					+bestProducer(PRODUCER_ID);
+					.print("update-------------");
+					+bestPrice(PRICE);
+					-bestPrice(BestPrice);
+				}
+			}
+			?bestProducer(BestProducer);
+			?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
+			.send(BestProducer,achieve,sell(CUSTOMER_ID));
+		/* 	?qtd_bought_itens(Qtd);
+			TmpQtde = Qtd + 1;
+			+qtd_bought_itens(TmpQtde);
+			-qtd_bought_itens(Qtd);
+			.print("I have already bought from ",BestProducer, ". Now I have ",TmpQtde, " itens");
+		*/
+			-i_am_ready(false);
+			+i_am_ready(true);
 		}
-		.send(PRODUCER_ID,achieve,sell).
+		.
++!sold: i_am_ready(Status)
+	<-	if(Status == true)
+		{
+			?bestProducer(BestProducer);
+			?qtd_bought_itens(Qtd);
+			TmpQtde = Qtd + 1;
+			+qtd_bought_itens(TmpQtde);
+			-qtd_bought_itens(Qtd);
+			.print("I have already bought from ",BestProducer, ". Now I have ",TmpQtde, " itens");
+		}
+		.

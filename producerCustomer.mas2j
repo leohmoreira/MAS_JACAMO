@@ -5,7 +5,7 @@ MAS producerCustomer {
 	agents:
 		customer;
 		producer #3;
-		agent1 sample_agent;
+		//agent1 sample_agent;
 
 	aslSourcePath:
 		"src/asl";
