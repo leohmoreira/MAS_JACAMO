@@ -36,6 +36,7 @@
 			T = ITENS_AVAILABLE + 1;
 			+itensAvailable(T);	//update belief
 			.print("Producer: ",PRODUCER_ID," -> new item assembled ",T);
+			!working(T); //continue working
 		}
 		else
 		{
@@ -43,8 +44,8 @@
 			-i_am_ready(true);
 			+i_am_ready(false);
 		}
-		!working(T). //continue working
-+!howMuch(CUSTOMER,MONEY): i_am_ready(true)
+		.
++!howMuch(CUSTOMER,MONEY): true
 	<- 	.print("--------------------------");
 		.print(CUSTOMER,MONEY);
 		?myConfiguration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT); //recover configuration
@@ -55,4 +56,8 @@
 			.print("!!!",MONEY,PRICE);
 		}
 		.
-	
++!sell:	i_am_ready(trues)
+	<- ?itensAvailable(T);
+		TMP = T - 1;
+		.print("Vendido = ",TMP);
+		!working(TMP).

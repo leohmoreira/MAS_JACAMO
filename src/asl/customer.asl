@@ -1,7 +1,7 @@
 // Agent customer in project producerCustomer
 
 /* Initial beliefs and rules */
-
+bestPrice(-1).
 /* Initial goals */
 
 !start.
@@ -31,7 +31,18 @@
 +buy: i_am_ready(true) 
 	<-	.print("COMPREI").
 +!producerPrice(PRODUCER_ID,PRICE)
-	<- 	.union([PRODUCER_ID,PRICE],X,X);
-		.print("@@@@@@",X).
-		
-
+	<- 	?bestPrice(BestPrice);
+		if(BestPrice == -1)
+		{
+			-bestPrice(-1);
+			+bestPrice(PRICE);
+		}
+		else
+		{
+			if(BestPrice > PRICE)
+			{
+				-bestPrice(BestPrice);
+				+bestPrice(PRICE);
+			}
+		}
+		.send(PRODUCER_ID,achieve,sell).
