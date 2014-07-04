@@ -40,7 +40,6 @@ qtd_prducers(0).
 		{
 			if(BestPrice == -1)
 			{
-				.print("first-------------");
 				+bestPrice(PRICE);
 				-bestPrice(-1);
 				+bestProducer(PRODUCER_ID);
@@ -51,20 +50,28 @@ qtd_prducers(0).
 				{
 					-bestProducer(BestProducer);
 					+bestProducer(PRODUCER_ID);
-					.print("update-------------");
 					+bestPrice(PRICE);
 					-bestPrice(BestPrice);
 				}
 			}
 			?bestProducer(BestProducer);
 			?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
-			
-			.send(BestProducer,achieve,sell(CUSTOMER_ID));
+			?qtd_prducers(Q);
+			.random(RandomProducer);
+			ChosenProducer = math.floor(Q * RandomProducer);
+			!startBuying(ChosenProducer);
+			//.send(BestProducer,achieve,sell(CUSTOMER_ID));
 			-i_am_ready(false);
 			+i_am_ready(true);
 		}
 		.
-
++!startBuying(INDEX):true
+	<-	if(producers(INDEX,ID))
+		{
+			?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
+			.send(ID,achieve,sell(CUSTOMER_ID));
+		}
+		.
 +!sold: i_am_ready(Status)
 	<-	if(Status == true)
 		{
@@ -76,8 +83,8 @@ qtd_prducers(0).
 			.print("I have already bought from ",BestProducer, ". Now I have ",TmpQtde, " itens");
 		}
 		.
-+!addProducers:qtd_prducers(Q)
-	<- .print("+=+=", Q);
++!addProducers(PRODUCER_ID):qtd_prducers(Q)
+	<-  +producers(Q,PRODUCER_ID);
 		T = Q + 1;
 		+qtd_prducers(T);
 		-qtd_prducers(Q).
