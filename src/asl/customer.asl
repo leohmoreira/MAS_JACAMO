@@ -13,9 +13,11 @@ qtd_prducers(0).
 /* Plans */
 
 +!start : true 
-	<-	.my_name(ID);
+	<-	
+		.my_name(ID);
 		.random(MAXIMUM_PRICE);
 		//!set_configuration(ID,1 + math.round(10*MAXIMUM_PRICE)).
+		//.concat("gui",ID,MyGUI);
 		!set_configuration(ID,100).
 
 +!set_configuration(CUSTOMER_ID,MAXIMUM_PRICE): true
@@ -88,3 +90,8 @@ qtd_prducers(0).
 		T = Q + 1;
 		+qtd_prducers(T);
 		-qtd_prducers(Q).
+
++!drawYourself: true
+	<- 	.my_name(CUSTOMER_ID);
+		lookupArtifact("MyGUI",_);
+		drawItem(CUSTOMER_ID).
