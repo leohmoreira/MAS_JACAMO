@@ -4,6 +4,8 @@
 i_am_ready(false). 
 bestPrice(-1).
 qtd_bought_itens(0).
+qtd_prducers(0).
+
 /* Initial goals */
 
 !start.
@@ -56,17 +58,13 @@ qtd_bought_itens(0).
 			}
 			?bestProducer(BestProducer);
 			?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
+			
 			.send(BestProducer,achieve,sell(CUSTOMER_ID));
-		/* 	?qtd_bought_itens(Qtd);
-			TmpQtde = Qtd + 1;
-			+qtd_bought_itens(TmpQtde);
-			-qtd_bought_itens(Qtd);
-			.print("I have already bought from ",BestProducer, ". Now I have ",TmpQtde, " itens");
-		*/
 			-i_am_ready(false);
 			+i_am_ready(true);
 		}
 		.
+
 +!sold: i_am_ready(Status)
 	<-	if(Status == true)
 		{
@@ -78,3 +76,8 @@ qtd_bought_itens(0).
 			.print("I have already bought from ",BestProducer, ". Now I have ",TmpQtde, " itens");
 		}
 		.
++!addProducers:qtd_prducers(Q)
+	<- .print("+=+=", Q);
+		T = Q + 1;
+		+qtd_prducers(T);
+		-qtd_prducers(Q).

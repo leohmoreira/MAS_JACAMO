@@ -22,6 +22,10 @@ sold_itens(0).
 		-i_am_ready(false);
 		+i_am_ready(true); //indicates producerA is ready
 		+itensAvailable(0);	//update belief
+		//avisa outros agentes que sou um produtor
+		.wait(TIME_TO_ASSEMBLE * 100);
+		.broadcast(tell,producers(PRODUCER_ID,PRICE));
+		.broadcast(achieve,addProducers);
 		!working(0).//starts with 0 available itens
 
 +!working(V): i_am_ready(true) & myConfiguration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT)
@@ -94,3 +98,6 @@ sold_itens(0).
 			.print("wait, i am not ready yet");
 		}
 		.
++!newProducer(PRODUCER_ID,PRICE):true
+	//nada a fazer
+	<-true.
