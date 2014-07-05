@@ -95,3 +95,4 @@ qtd_prducers(0).
 	<- 	.my_name(CUSTOMER_ID);
 		lookupArtifact("MyGUI",_);
 		drawItem(CUSTOMER_ID).
+		
