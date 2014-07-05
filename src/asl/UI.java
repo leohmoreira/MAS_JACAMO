@@ -1,14 +1,13 @@
 // CArtAgO artifact code for project producerCustomer
 
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowEvent;
+import java.awt.GridBagLayout;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import cartago.INTERNAL_OPERATION;
 import cartago.OPERATION;
 
 public class UI extends cartago.tools.GUIArtifact {
@@ -26,30 +25,37 @@ public class UI extends cartago.tools.GUIArtifact {
 		frame.setVisible(true);
 	}
 
-	@OPERATION void drawItem(String value)
+	@OPERATION void drawItem(String id, Object value)
 	{
-		frame.addItem(value);
+		frame.addItem(id,String.valueOf(value));
 	}
 	class MyFrame extends JFrame 
 	{    
-		private JButton okButton;
-		private JTextField text;
 		private JPanel panel;
+		Map<String,JTextField> text_agent = new HashMap<String,JTextField>();
 		public MyFrame()
 		{
 			setTitle("Producer Customer ");
 			setSize(400,200);
 			this.panel = new JPanel();
 			setContentPane(panel);
-			//this.addItem();
 		}
-		public void addItem(String value)
-		{			
-			text = new JTextField(10);
-			text.setText(value);
-			text.setEditable(true);
-			this.panel.add(text);
-		}
+		public void addItem(String id, String value)
+		{	
+			if(this.text_agent.containsKey(id))
+			{
+				JTextField updateText2 = this.text_agent.get(id);
+				updateText2.setText(id+" vendeu/comprou "+value);
+			}
+			else
+			{
+				JTextField updateText = new JTextField(30);
+				updateText.setText(value);
+				updateText.setEditable(true);
+				this.text_agent.put(id, updateText);
+				this.panel.add(updateText);		
+			}
+		}		
 	}
 }
 

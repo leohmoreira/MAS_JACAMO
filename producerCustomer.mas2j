@@ -3,12 +3,9 @@ MAS producerCustomer {
 	infrastructure: JaCaMo
 
 	agents:
-		//guiStarter;
-		customer #2;
-		producer #3;
-		//agent1 sample_agent;
-		
-		//gui_tester agentArchClass c4jason.CAgentArch;
+		guiStarter;
+		customer ;
+		producer ;
 
 	aslSourcePath:
 		"src/asl";

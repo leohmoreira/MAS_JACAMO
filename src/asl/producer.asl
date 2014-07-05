@@ -10,12 +10,11 @@ sold_itens(0).
 /* Plans */
 
 +!start : true 
-	<-	//.wait(2000);
-		.my_name(ID);
+	<-	.my_name(ID);
 		.random(PRICE);
 		.random(TIME_TO_ASSEMBLE);
 		.random(LIMIT);
-		
+		.wait(LIMIT*1000);
 		!set_configuration(ID,1 + math.round(10*PRICE),1 + math.round(10*TIME_TO_ASSEMBLE),10+math.round(10*LIMIT)).
 
 +!set_configuration(PRODUCER_ID,PRICE,TIME_TO_ASSEMBLE,LIMIT): true
@@ -27,7 +26,7 @@ sold_itens(0).
 		//drawItem(PRODUCER_ID);
 		+itensAvailable(0);	//update belief
 		//avisa outros agentes que sou um produtor
-		.wait(TIME_TO_ASSEMBLE * 100);
+		.wait(TIME_TO_ASSEMBLE * 1000);
 		//.broadcast(tell,producers(PRODUCER_ID,PRICE));
 		.broadcast(achieve,addProducers(PRODUCER_ID));
 		!working(0).//starts with 0 available itens
@@ -91,8 +90,11 @@ sold_itens(0).
 				TmpSoldItens = SoldQtd + 1;
 				+sold_itens(TmpSoldItens); 
 				-sold_itens(SoldQtd);
-				.print("I have already sold ",TmpSoldItens, " itens");
 				.send(CUSTOMER,achieve,sold);//update price list
+				.print("I have already sold ",TmpSoldItens, " itens");
+				.my_name(PRODUCER_ID);
+				lookupArtifact("MyGUI",_);
+				drawItem(PRODUCER_ID,TmpSoldItens);
 				!working(TMP);
 				
 			}
@@ -109,4 +111,4 @@ sold_itens(0).
 +!drawYourself: true
 	<- 	.my_name(PRODUCER_ID);
 		lookupArtifact("MyGUI",_);
-		drawItem("PRODUCER_ID").
+		drawItem(PRODUCER_ID,PRODUCER_ID).

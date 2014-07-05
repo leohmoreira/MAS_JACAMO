@@ -13,11 +13,9 @@ qtd_prducers(0).
 /* Plans */
 
 +!start : true 
-	<-	
-		.my_name(ID);
+	<-	.my_name(ID);
 		.random(MAXIMUM_PRICE);
-		//!set_configuration(ID,1 + math.round(10*MAXIMUM_PRICE)).
-		//.concat("gui",ID,MyGUI);
+		.wait(MAXIMUM_PRICE*1000);
 		!set_configuration(ID,100).
 
 +!set_configuration(CUSTOMER_ID,MAXIMUM_PRICE): true
@@ -29,14 +27,14 @@ qtd_prducers(0).
 
 +!working: i_am_ready(true) 
 	<-	?myConfiguration(CUSTOMER_ID,MAXIMUM_PRICE);
+		.random(TIME_TO_WORK);
+		.wait(TIME_TO_WORK*1000);
 		.broadcast(achieve,howMuch(CUSTOMER_ID,MAXIMUM_PRICE));//aviso a todos que quero saber o preco
-		//.print("sent");
-		.wait(2000);
 		!working.
 
 +!producerPrice(PRODUCER_ID,PRICE):i_am_ready(Status)
-	<- 	+i_am_ready(false);
-		-i_am_ready(true);
+	<- 	//+i_am_ready(false);
+		//-i_am_ready(true);
 		?bestPrice(BestPrice);
 		if(Status == true)
 		{
@@ -63,8 +61,8 @@ qtd_prducers(0).
 			ChosenProducer = math.floor(Q * RandomProducer);
 			!startBuying(ChosenProducer);
 			//.send(BestProducer,achieve,sell(CUSTOMER_ID));
-			-i_am_ready(false);
-			+i_am_ready(true);
+			//-i_am_ready(false);
+			//+i_am_ready(true);
 		}
 		.
 +!startBuying(INDEX):true
@@ -83,6 +81,9 @@ qtd_prducers(0).
 			+qtd_bought_itens(TmpQtde);
 			-qtd_bought_itens(Qtd);
 			.print("I have already bought from ",BestProducer, ". Now I have ",TmpQtde, " itens");
+			.my_name(CUSTOMER_ID);
+			lookupArtifact("MyGUI",_);
+			drawItem(CUSTOMER_ID,Qtd);
 		}
 		.
 +!addProducers(PRODUCER_ID):qtd_prducers(Q)
@@ -94,5 +95,9 @@ qtd_prducers(0).
 +!drawYourself: true
 	<- 	.my_name(CUSTOMER_ID);
 		lookupArtifact("MyGUI",_);
-		drawItem(CUSTOMER_ID).
+		drawItem(CUSTOMER_ID,CUSTOMER_ID).
 		
++!howMuch(CUSTOMER,MONEY): true
+	<- 	true.
++!sell:true
+	<- true.
