@@ -1,3 +1,4 @@
+// using JACA
 MAS producerCustomer {
 
 	infrastructure: JaCaMo
